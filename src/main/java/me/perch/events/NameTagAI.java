@@ -1,15 +1,15 @@
-package rebelmythik.antiVillagerLag.events;
+package me.perch.events;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.VillagerUtilities;
 
 public class NameTagAI {
 
-    public static boolean call(Villager villager, AntiVillagerLag plugin, Player player) {
+    public static boolean call(Villager villager, VillagerOptimisation plugin, Player player) {
         if (!plugin.getConfig().getBoolean("toggleableoptions.userenaming")) return false;
         //  Ensure item is a nametag
         ItemStack nametag = player.getInventory().getItemInMainHand();

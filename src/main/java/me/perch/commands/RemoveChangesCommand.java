@@ -1,4 +1,4 @@
-package rebelmythik.antiVillagerLag.commands;
+package me.perch.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -9,16 +9,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.ColorCode;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.VillagerUtilities;
 
 public class RemoveChangesCommand implements CommandExecutor {
 
-    AntiVillagerLag plugin;
+    VillagerOptimisation plugin;
     private boolean confirming;
 
-    public RemoveChangesCommand(AntiVillagerLag plugin) {
+    public RemoveChangesCommand(VillagerOptimisation plugin) {
         this.plugin = plugin;
         confirming = false;
     }
@@ -27,11 +26,11 @@ public class RemoveChangesCommand implements CommandExecutor {
     // First implementation of a removal command. Needs more work
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("avlremove")) {
+        if (command.getName().equalsIgnoreCase("pvoremove")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 if (args.length == 0) {
-                    player.sendMessage("Type '/avlremove confirm' to remove all changes made by this plugin");
+                    player.sendMessage("Type '/pvoremove confirm' to remove all changes made by this plugin");
                     confirming = true;
                     return true;
                 } else if (args.length == 1 && args[0].equalsIgnoreCase("confirm")) {
@@ -46,7 +45,7 @@ public class RemoveChangesCommand implements CommandExecutor {
                     }
                     return true;
                 } else {
-                    player.sendMessage("Invalid arguments. Usage: /avlremove or /avlremove confirm");
+                    player.sendMessage("Invalid arguments. Usage: /pvoremove or /pvoremove confirm");
                     return true;
                 }
             } else {
@@ -58,7 +57,7 @@ public class RemoveChangesCommand implements CommandExecutor {
                     sender.sendMessage("All changes have been removed.");
                     return true;
                 } else {
-                    sender.sendMessage("Invalid arguments. Usage: /avlremove confirm");
+                    sender.sendMessage("Invalid arguments. Usage: /pvoremove confirm");
                     return true;
                 }
             }

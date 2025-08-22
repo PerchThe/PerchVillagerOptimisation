@@ -1,17 +1,17 @@
-package rebelmythik.antiVillagerLag.events;
+package me.perch.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.CalculateLevel;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.CalculateLevel;
+import me.perch.utils.VillagerUtilities;
 
 public class VillagerLevelManager {
 
-    public static void call(Villager vil, AntiVillagerLag plugin, Player player) {
+    public static void call(Villager vil, VillagerOptimisation plugin, Player player) {
         int cooldown = 5;
         int vilLevel = vil.getVillagerLevel();
         long newLevel = CalculateLevel.villagerEXP(vil);
@@ -23,7 +23,7 @@ public class VillagerLevelManager {
 
         if (vilLevelCooldown > currentTime) {
             String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
-            message = message.replaceAll("%avlseconds%", Long.toString(sec));
+            message = message.replaceAll("%pvoseconds%", Long.toString(sec));
             player.sendMessage(VillagerUtilities.colorcodes.cm(message));
             return;
         }

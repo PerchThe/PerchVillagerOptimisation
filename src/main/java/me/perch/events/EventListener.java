@@ -1,10 +1,11 @@
-package rebelmythik.antiVillagerLag.events;
+package me.perch.events;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -12,26 +13,68 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.UpdateChecker;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.VillagerUtilities;
+
+// Optional: claim trust check for GriefPrevention (legacy v16 API)
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.ryanhamshire.GriefPrevention.Claim;
 
 public class EventListener implements Listener {
 
-    AntiVillagerLag plugin;
+    VillagerOptimisation plugin;
 
-
-    public EventListener(AntiVillagerLag plugin) {
+    public EventListener(VillagerOptimisation plugin) {
         this.plugin = plugin;
     }
 
+    // --- ROTATE VILLAGER ON LEFT-CLICK (HIT) WITH DISABLING NAME-TAG ---
+    // Run even if another plugin (e.g., GP/GPFlags ProtectNamedMobs) cancelled the damage event.
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onVillagerHit(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Villager)) return;
+        if (!(event.getDamager() instanceof Player)) return;
+
+        Player player = (Player) event.getDamager();
+        Villager villager = (Villager) event.getEntity();
+
+        // Respect GriefPrevention claim trust (skip rotation if player isn't trusted).
+        try {
+            Claim claim = GriefPrevention.instance.dataStore.getClaimAt(villager.getLocation(), true, null);
+            if (claim != null && claim.allowAccess(player) != null && !player.hasPermission("pvo.rotate.bypassclaims")) {
+                // Not trusted here; leave any existing cancellation intact.
+                return;
+            }
+        } catch (Throwable ignored) {
+            // GP not present or API changed; fail open to avoid hard dependency.
+        }
+
+        // Only rotate if player is holding the disabling name-tag in main hand
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        if (mainHand.getType() == Material.NAME_TAG && mainHand.hasItemMeta() && mainHand.getItemMeta().hasDisplayName()) {
+            boolean nametag_result = NameTagAI.call(villager, plugin, player);
+            if (nametag_result) {
+                float rotateBy = player.isSneaking() ? 1.0F : 45.0F;
+                Location loc = villager.getLocation();
+                float newYaw = loc.getYaw() + rotateBy;
+                if (newYaw >= 360.0F) newYaw -= 360.0F;
+                loc.setYaw(newYaw);
+                loc.setPitch(0.0F);
+                villager.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                // Prevent damage regardless of other plugins' decisions.
+                event.setCancelled(true);
+                return;
+            }
+        }
+        // Otherwise, allow normal damage (or let other plugins keep it cancelled).
+    }
 
     @EventHandler
     public void onRightClick(PlayerInteractEntityEvent event) {
         if (event.isCancelled()) return;
         Player player = event.getPlayer();
-        //  It's a villager
         if (!event.getRightClicked().getType().equals(EntityType.VILLAGER)) return;
         Villager villager = (Villager) event.getRightClicked();
 
@@ -55,31 +98,29 @@ public class EventListener implements Listener {
         if (vilLevelCooldown > currentTime) {
             String message = plugin.getConfig().getString("messages.cooldown-levelup-message");
             long level_sec = vilLevelCooldown - currentTime;
-            message = message.replaceAll("%avlseconds%", Long.toString(level_sec));
+            message = message.replaceAll("%pvoseconds%", Long.toString(level_sec));
             event.getPlayer().sendMessage(VillagerUtilities.colorcodes.cm(message));
             villager.shakeHead();
             event.setCancelled(true);
             return;
         }
 
-        //  Should it be disabled?
         boolean nametag_result = NameTagAI.call(villager, plugin, player);
         boolean block_result = BlockAI.call(villager, plugin, player);
         boolean workblock_result = WorkblockAI.call(villager, plugin, player);
         boolean should_be_disabled = nametag_result || block_result || workblock_result;
 
-
         //  If villager AI is being toggled
         if (should_be_disabled == VillagerUtilities.getMarker(villager, plugin)) {
             //  If toggling is on cooldown
-            if ((vilAiCooldown > currentTime) && !player.hasPermission("avl.cooldown.bypass")) {
+            if ((vilAiCooldown > currentTime) && !player.hasPermission("pvo.cooldown.bypass")) {
                 //Tell player it's on cooldown
                 String message = plugin.getConfig().getString("messages.cooldown-ai-message");
-                message = message.replaceAll("%avlminutes%", Long.toString(min));
-                message = message.replaceAll("%avlseconds%", Long.toString(sec));
+                message = message.replaceAll("%pvominutes%", Long.toString(min));
+                message = message.replaceAll("%pvoseconds%", Long.toString(sec));
                 event.getPlayer().sendMessage(VillagerUtilities.colorcodes.cm(message));
                 event.setCancelled(true);
-            //  If cooldown is over
+                //  If cooldown is over
             } else {
                 VillagerUtilities.setMarker(villager, plugin, !should_be_disabled);
                 villager.setAware(!should_be_disabled);
@@ -152,24 +193,13 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void playerJoin(PlayerJoinEvent event) {
-        if (!event.getPlayer().hasPermission("avl.notify.update")) return;
-        new UpdateChecker(plugin, 102949).getVersion(version -> {
-            if (plugin.getDescription().getVersion().equals(version)) {
-                event.getPlayer().sendMessage(ChatColor.GREEN + "AntiVillagerLag is up to date!");
-            } else {
-                event.getPlayer().sendMessage(ChatColor.GREEN + "There is an update for AntiVillagerLag! https://www.spigotmc.org/resources/antivillagerlag.102949/");
-            }
-        });
-    }
 
     // Event to handle Villager updating
     @EventHandler
     public void afterTrade(InventoryCloseEvent event) {
 
         Player player = (Player) event.getPlayer();
-        if(player.hasPermission("avl.disable"))
+        if(player.hasPermission("pvo.disable"))
             return;
         // check if inventory belongs to a Villager Trade Screen
         if (event.getInventory().getHolder() == null) return;

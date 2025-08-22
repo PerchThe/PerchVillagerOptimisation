@@ -7,6 +7,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="antivillagerlagv3" />
+        <module name="antivillagerlag" />
+        <module name="PerchVillagerOptimisation" />
       </profile>
     </annotationProcessing>
   </component>

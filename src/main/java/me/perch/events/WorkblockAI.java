@@ -1,14 +1,14 @@
-package rebelmythik.antiVillagerLag.events;
+package me.perch.events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.VillagerUtilities;
 
 public class WorkblockAI {
 
-    public static boolean call(Villager villager, AntiVillagerLag plugin, Player player) {
+    public static boolean call(Villager villager, VillagerOptimisation plugin, Player player) {
         //check if workstation is disabled
         if (!plugin.getConfig().getBoolean("toggleableoptions.useworkstations")) return false;
 

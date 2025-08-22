@@ -1,34 +1,34 @@
-name: AntiVillagerLag
+name: PerchVillagerOptimisation
 version: '${project.version}'
-main: rebelmythik.antiVillagerLag.AntiVillagerLag
+main: me.perch.VillagerOptimisation
 api-version: '1.20'
-authors: [ RebelMythik, CaveRaider ]
+authors: [ RebelMythik, CaveRaider, KayaLambrex]
 description: Bonk Villagers
 
 commands:
-  avlreload:
-    description: "Reloads the AVL plugin"
-    usage: "/avlreload"
-    permission: avl.reload
-  avloptimize:
+  pvoreload:
+    description: "Reloads the pvo plugin"
+    usage: "/pvoreload"
+    permission: pvo.reload
+  pvooptimize:
     description: "Will optimize all villagers within a configurable radius by renaming them"
-    usage: "/avloptimize"
-    permission: avl.optimize
-  avlunoptimize:
+    usage: "/pvooptimize"
+    permission: pvo.optimize
+  pvounoptimize:
     description: "Will unoptimize all villagers within a configurable radius by renaming them"
-    usage: "/avlunoptimize"
-    permission: avl.unoptimize
-  avlremove:
+    usage: "/pvounoptimize"
+    permission: pvo.unoptimize
+  pvoremove:
     description: "Will remove all changes done by the plugin server wide"
-    usage: "/avlremove"
-    permission: avl.remove
+    usage: "/pvoremove"
+    permission: pvo.remove
 
 permissions:
-  avl.cooldown.bypass:
+  pvo.cooldown.bypass:
     default: false
-  avl.message.nextrestock:
+  pvo.message.nextrestock:
     default: true
-  avl.restockcooldown.bypass:
+  pvo.restockcooldown.bypass:
     default: false
-  avl.notify.update:
+  pvo.notify.update:
     op: true

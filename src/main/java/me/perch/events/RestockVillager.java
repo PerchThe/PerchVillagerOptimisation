@@ -1,26 +1,26 @@
-package rebelmythik.antiVillagerLag.events;
+package me.perch.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.VillagerUtilities;
 
 public class RestockVillager {
 
-    private static void restockMessage(long timeTillNextRestock, Player player, AntiVillagerLag plugin) {
+    private static void restockMessage(long timeTillNextRestock, Player player, VillagerOptimisation plugin) {
         long totalsec = timeTillNextRestock / 20;
         long sec = totalsec % 60;
         long min = (totalsec - sec) / 60;
         String message = plugin.getConfig().getString("messages.next-restock");
-        message = message.replaceAll("%avlrestockmin%", Long.toString(min));
-        message = message.replaceAll("%avlrestocksec%", Long.toString(sec));
+        message = message.replaceAll("%pvorestockmin%", Long.toString(min));
+        message = message.replaceAll("%pvorestocksec%", Long.toString(sec));
         player.sendMessage(VillagerUtilities.colorcodes.cm(message));
     }
 
-    public static void call(Villager vil, AntiVillagerLag plugin, Player player) {
+    public static void call(Villager vil, VillagerOptimisation plugin, Player player) {
 
         // Permission to Bypass restock cooldown
-        if (player.hasPermission("avl.restockcooldown.bypass")) {
+        if (player.hasPermission("pvo.restockcooldown.bypass")) {
             VillagerUtilities.restock(vil);
             VillagerUtilities.setLastRestock(vil, plugin);
             return;
@@ -42,7 +42,7 @@ public class RestockVillager {
         }
 
         // check if he gets to see cool-down time
-        if (player.hasPermission("avl.message.nextrestock")) {
+        if (player.hasPermission("pvo.message.nextrestock")) {
             long timeTillNextRestock = Long.MAX_VALUE;
             for (long restockTime : VillagerUtilities.restock_times) {
                 long restockTick = beginningOfDayTick + restockTime;

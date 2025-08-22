@@ -1,22 +1,21 @@
-package rebelmythik.antiVillagerLag.commands;
+package me.perch.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import rebelmythik.antiVillagerLag.AntiVillagerLag;
-import rebelmythik.antiVillagerLag.utils.ColorCode;
-import rebelmythik.antiVillagerLag.utils.VillagerUtilities;
+import me.perch.VillagerOptimisation;
+import me.perch.utils.VillagerUtilities;
 
 public class ReloadCommand implements CommandExecutor {
 
-    AntiVillagerLag plugin;
+    VillagerOptimisation plugin;
 
-    public ReloadCommand(AntiVillagerLag plugin) {
+    public ReloadCommand(VillagerOptimisation plugin) {
         this.plugin = plugin;
     }
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("avlreload")) {
-            if(!sender.hasPermission("avl.reload")) {
+        if (cmd.getName().equalsIgnoreCase("pvoreload")) {
+            if(!sender.hasPermission("pvo.reload")) {
                 sender.sendMessage(VillagerUtilities.colorcodes.cm(plugin.getConfig().getString("messages.no-permission")));
                 return true;
             }

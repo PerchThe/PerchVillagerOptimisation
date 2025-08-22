@@ -36,10 +36,10 @@ RestockTimes:
 # at the minimum time of 10 minutes or 600 seconds due anything less allowing for the double trades to happen.
 ai-toggle-cooldown: 600
 
-# The maximum radius in blocks the /avloptimize command can search
+# The maximum radius in blocks the /pvooptimize command can search
 RadiusLimit: 50
 
-# the default radius for /avloptimize when no argument is specified
+# the default radius for /pvooptimize when no argument is specified
 RadiusDefault: 50
 
 toggleableoptions:
@@ -50,7 +50,7 @@ toggleableoptions:
   usenametags: false
 
   # One of these following options needs to be true for the plugin to work.
-  ### This will allow nametags to disable and renable the Villager AI. This also effects the /avloptimize command
+  ### This will allow nametags to disable and renable the Villager AI. This also effects the /pvooptimize command
   userenaming: true
 
   ### This will allow a block to disable and renable the Villager AI.
@@ -63,13 +63,13 @@ toggleableoptions:
 messages:
   no-permission: "&cYou don't have permission to use this command."
   reload-message: "&aPlugin successfully reloaded."
-  cooldown-ai-message: "&cYou can toggle this villager's AI again in %avlminutes% minutes and %avlseconds% seconds."
-  cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %avlseconds% seconds."
-  next-restock: "&cThe next restock for the villager will be in %avlrestockmin% minutes and %avlrestocksec% seconds."
-  optimize-command-usage: "&cCorrect Usage is /avloptimize <radius>"
-  unoptimize-command-usage: "&cCorrect Usage is /avlunoptimize <radius>"
-  radius-limit: "&cThe radius you tried is too big. Radius limit is %avlradiuslimit% blocks."
+  cooldown-ai-message: "&cYou can toggle this villager's AI again in %pvominutes% minutes and %pvoseconds% seconds."
+  cooldown-levelup-message: "&cThe villager is currently leveling up! You can use the villager again in %pvoseconds% seconds."
+  next-restock: "&cThe next restock for the villager will be in %pvorestockmin% minutes and %pvorestocksec% seconds."
+  optimize-command-usage: "&cCorrect Usage is /pvooptimize <radius>"
+  unoptimize-command-usage: "&cCorrect Usage is /pvounoptimize <radius>"
+  radius-limit: "&cThe radius you tried is too big. Radius limit is %pvoradiuslimit% blocks."
   VillagerMustBeDisabled: "&cYou need to disable the villager before you can trade with it"
-  searching-radius: "&aSearching radius of %avlradius% blocks."
+  searching-radius: "&aSearching radius of %pvoradius% blocks."
   radius-invalid: "&cRadius must be a valid Integer."
 

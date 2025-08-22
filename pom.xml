@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>rebelmythik</groupId>
-    <artifactId>antivillagerlag</artifactId>
-    <version>3.0.6</version>
+    <artifactId>PerchVillagerOptimisation</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>antivillagerlag</name>
+    <name>PerchVillagerOptimisation</name>
 
     <properties>
         <java.version>17</java.version>
@@ -32,15 +32,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.5.3</version>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
-                            <shadedPattern>rebelmythik.antivillagerlag.utils</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -59,10 +50,15 @@
         </resources>
     </build>
 
+
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -76,7 +72,14 @@
             <artifactId>spigot-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency><dependency>
+        </dependency>
+        <dependency>
+            <groupId>com.github.TechFortress</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>16.18.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
         <groupId>org.bstats</groupId>
         <artifactId>bstats-bukkit</artifactId>
         <version>3.0.0</version>
